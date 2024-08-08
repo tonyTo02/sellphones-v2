@@ -59,6 +59,8 @@
                         <form action="{{route('guess.add.cart', $product->id)}}" method="post">
                             @csrf
                             <button href="" class="btn btn-primary add-to-cart">Mua ngay</button>
+                            <a href="{{route('product.detail', $product->id)}}" class="btn btn-success view-detail">Xem chi
+                                tiết</a>
                         </form>
                     </div>
                 </div>
@@ -72,7 +74,6 @@
 
 @push('js')
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script>
         $(document).ready(function () {

@@ -22,12 +22,19 @@ class LoginController extends Controller
         $object = $customer::where('email', '=', $email, 'and', 'password', '=', $password)->get()->first();
         if ($object) {
             Auth::login($object);
-            return redirect()->route('homepage');
+            return redirect()->route('homepage')->with('message', 'Xin chào');
         } else {
             return back()->with('Fail', 'Email hoac mat khau khong chinh xacs');
         }
     }
 
+    public function dashboard()
+    {
+        if (Auth::user()) {
+            return view('auth.dashboard');
+        }
+        return redirect()->route('auth.login');
+    }
     public function logOut(Request $request)
     {
         Auth::logout();

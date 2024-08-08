@@ -107,7 +107,7 @@
                         <a class="btn btn-danger" href="{{route('auth.register')}}">Đăng ký</a>
                     @endguest
                     @auth
-                        <a href="#" class="text-white">Hello {{Auth::user()->name}}</a>
+                        <a href="{{route('auth.dashboard')}}" class="text-white">Hello {{Auth::user()->name}}</a>
                         <form action="{{ route('auth.logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn-link nav-link text-white bg-danger">Logout</button>

@@ -41,7 +41,17 @@ class BillController extends Controller
     {
         return view('bill.create');
     }
-
+    public function updateCartForGuess($quantity)
+    {
+        $cart = session()->get('product', []);
+        foreach ($cart as $key => $value) {
+            if (isset($cart[$key])) {
+                $cart[$key]['quantity'] = $quantity;
+            }
+        }
+        session()->put('product', $cart);
+        session()->reflash();
+    }
     /**
      * Store a newly created resource in storage.
      */

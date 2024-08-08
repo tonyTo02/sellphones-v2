@@ -56,9 +56,12 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show($product)
     {
-        //
+        $object = $this->model::query()->find($product);
+        return view('guess.detail', [
+            'data' => $object
+        ]);
     }
 
     /**

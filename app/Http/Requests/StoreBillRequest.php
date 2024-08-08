@@ -25,20 +25,15 @@ class StoreBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_time' => [
-                'required',
-                'date'
-            ],
-            'note' => [
-                'required'
-
-            ],
             'status' => [
                 'required',
-                Rule::in([BillStatusEnum::getArrayView()]),
+                Rule::in(BillStatusEnum::getArrayView()),
             ],
             'total' => [
                 'required',
+            ],
+            'note' => [
+                'string',
             ],
             'customer_id' => [
                 'required',

@@ -28,9 +28,6 @@ class UpdateBillRequest extends FormRequest
             'order_time' => [
                 'required',
             ],
-            'note' => [
-                'required',
-            ],
             'status' => [
                 'required',
                 Rule::in(BillStatusEnum::getArrayView()),

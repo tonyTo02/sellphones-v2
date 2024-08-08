@@ -24,9 +24,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [GuestController::class, 'index'])->name('homepage');
 Route::get('/cart', [GuestController::class, 'viewCart'])->name('guess.cart');
+Route::get('/cashout', [GuestController::class, 'cashOut'])->name('guess.cash.out');
+Route::post('/cashout', [GuestController::class, 'cashOutProcess'])->name('cashout.process');
 Route::post('/{id}', [GuestController::class, 'addToCart'])->name('guess.add.cart');
 
 Route::prefix('auth')->group(function () {
+    Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('auth.dashboard');
     Route::get('/login', [LoginController::class, 'loadLoginForm'])->name('auth.login');
     Route::post('/login', [LoginController::class, 'checkLogin'])->name('auth.check.login');
     Route::post('/logout', [LoginController::class, 'logOut'])->name('auth.logout');
@@ -42,6 +45,8 @@ Route::prefix('admin')->group(function () {
     Route::put('/bill/{id}', [BillController::class, 'update'])->name('bill.update');
     Route::delete('/bill/{id}', [BillController::class, 'destroy'])->name('bill.destroy');
 });
+
+Route::get('/detail/{id}', [ProductController::class, 'show'])->name('product.detail');
 Route::prefix('admin')->group(function () {
     Route::get('/product', [ProductController::class, 'index'])->name('product.index');
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');

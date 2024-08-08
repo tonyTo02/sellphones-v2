@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\BillStatusEnum;
+use App\Models\Customer;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreCustomerRequest extends FormRequest
+class StoreBillCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,6 +25,20 @@ class StoreCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'status' => [
+                'required',
+                Rule::in(BillStatusEnum::getArrayView()),
+            ],
+            'total' => [
+                'required',
+            ],
+            'note' => [
+                'string',
+            ],
+            'customer_id' => [
+                'required',
+                Rule::exists(Customer::class, 'id')
+            ],
             'name' => [
                 'required',
                 'string',
@@ -34,12 +51,10 @@ class StoreCustomerRequest extends FormRequest
             ],
             'dob' => [
                 'required',
-                'date',
             ],
             'email' => [
                 'required',
                 'email',
-                'unique:customers,email'
             ],
             'password' => [
                 'required',
@@ -47,16 +62,12 @@ class StoreCustomerRequest extends FormRequest
             ],
             'address' => [
                 'required',
+                'string'
             ],
             'phone_number' => [
                 'required',
+                'string'
             ],
-        ];
-    }
-    public function messages()
-    {
-        return [
-            'email.unique' => 'The email has already been taken.',
         ];
     }
 }
