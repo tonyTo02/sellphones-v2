@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bill;
 use App\Http\Requests\StoreBillRequest;
 use App\Http\Requests\UpdateBillRequest;
+use App\Models\BillDetail;
 use Illuminate\Http\Request;
 
 class BillController extends Controller
@@ -20,13 +21,17 @@ class BillController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('q');
+        $billID = $request->get('id');
         $data = $this->model::join('customers', 'bills.customer_id', '=', 'customers.id')
             ->select('bills.*', 'customers.name', 'customers.address', 'customers.phone_number')
             ->where('customers.name', 'like', '%' . $search . '%')
             ->orderBy('bills.id')
             ->paginate(10);
+        $detailBill = $this->detailBill($billID);
+        // return response()->json($detailBill);
         return view('bill.index', [
             'data' => $data,
+            'detailBill' => $detailBill,
         ]);
     }
 
@@ -101,5 +106,34 @@ class BillController extends Controller
     {
         $this->model->destroy($id);
         return redirect()->route('bill.index');
+    }
+
+
+    private function detailBill($billID)
+    {
+        /*
+            SELECT bill_details.*, products.name, products.price, bills.total
+            FROM bill_details
+            LEFT JOIN bills on bills.id = bill_details.bill_id
+            LEFT JOIN products on products.id = bill_details.product_id
+        */
+
+        $detailBill = new BillDetail();
+        $object = $detailBill::leftJoin('bills', 'bills.id', '=', 'bill_details.bill_id')
+            ->leftJoin('products', 'products.id', '=', 'bill_details.product_id')
+            ->select('bill_details.*', 'products.name', 'products.price', 'bills.total')
+            ->where('bill_details.bill_id', '=', $billID)
+            ->get();
+        // ->orderBy('bill_details.bill_id');
+        return $object;
+    }
+
+    public function listOrderCustomer($customerID)
+    {
+        $data = $this->model::join('customers', 'bills.customer_id', '=', 'customers.id')
+            ->select('bills.*')
+            ->where('bills.customer_id', '=', $customerID)
+            ->get();
+        return $data;
     }
 }

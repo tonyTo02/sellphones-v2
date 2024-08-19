@@ -17,7 +17,7 @@
         @auth
             <div class="row">
                 <div class="col-6 justify-content-center text-center border me-1">
-                    <input type="text" name="customer_id" class="form-control" value="{{Auth::user()->id}}">
+                    <input type="text" name="customer_id" class="form-control" value="{{Auth::user()->id}}" hidden>
                     <input type="text" name="gender" value="{{Auth::user()->gender}}" hidden>
                     <input type="text" name="dob" value="{{Auth::user()->dob}}" hidden>
                     <input type="text" name="password" value="{{Auth::user()->password}}" hidden>

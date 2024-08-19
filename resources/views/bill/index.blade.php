@@ -4,6 +4,37 @@
         .search-bar {
             width: 30%;
         }
+
+        .detail-bill {
+            cursor: pointer;
+        }
+
+        .close-button {
+            background-color: #f0f0f0;
+
+        }
+
+        .detail-bill-alert {
+            height: 500px;
+            width: 500px;
+            position: fixed;
+            top: 0%;
+            left: 50%;
+            background-color: #f0f0f0;
+            z-index: 99;
+        }
+
+        .blur {
+            filter: blur(2px);
+            opacity: 0.3;
+        }
+
+        .close-icon {
+            cursor: pointer;
+            color: red;
+            position: absolute;
+            right: 0;
+        }
     </style>
 @endpush
 @section('content')
@@ -30,15 +61,17 @@
     </tr>
     @foreach ($data as $each)
         <tr>
-            <td>{{$each->id}}</td>
+            <td class="bill">{{$each->id}}</td>
             <td>{{$each->name}}</td>
             <td>{{$each->order_time}}</td>
             <td>{{$each->phone_number}}</td>
             <td>{{$each->note}}</td>
             <td>{{$each->address}}</td>
             <td class="status">{{$each->getBillStatus()}}</td>
-            <td>{{$each->total . '.00$'}}</td>
-            <td>Chi tiết</td>
+            <td>${{$each->total}}</td>
+            <td>
+                <a class="detail-bill">Chi Tiết</a>
+            </td>
             <td>
                 <a href="{{route('bill.edit', $each->id)}}" class="btn btn-primary">Edit</a>
             </td>
@@ -55,10 +88,64 @@
 <div class="mt-8">
     {{$data->links('pagination')}}
 </div>
+<div class="detail-bill-alert p-1 m-1" hidden>
+    <div class="close-button">
+        <a class="close-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="close" width="30px" height="30px">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+        </a>
+    </div>
+    <div class="row text-center">
+        <h4>CHI TIẾT ĐƠN HÀNG</h4>
+    </div>
+    <div class="row">
+        <div class="col">
+            Sản phẩm
+        </div>
+        <div class="col">
+            Đơn giá
+        </div>
+        <div class="col">
+            Số lượng
+        </div>
+        <div class="col">
+            Thành tiền
+        </div>
+    </div>
+    <hr>
+    @foreach ($detailBill as $each)
+        <div class="row">
+            <div class="col">
+                {{$each->name}}
+            </div>
+            <div class="col">
+                {{$each->price}}
+            </div>
+            <div class="col">
+                {{$each->quantity}}
+            </div>
+            <div class="col">
+                ${{$each->price * $each->quantity}}
+            </div>
+        </div>
+        <hr>
+    @endforeach
+</div>
 @push('js')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
+
+            if (localStorage.getItem('showDetailBillAlert') === 'true') {
+                // Hiển thị div 'detail-bill-alert' nếu trạng thái là 'true'
+                $('.detail-bill-alert').removeAttr('hidden');
+                // Xóa trạng thái trong localStorage để tránh việc hiển thị ngoài ý muốn
+                localStorage.removeItem('showDetailBillAlert');
+            } else {
+                $('.detail-bill-alert').attr('hidden', true);
+            }
+
             $('td.status').each(function () {
                 let statusText = $(this).text();
                 if (statusText == 'Đang giao hàng') {
@@ -79,7 +166,26 @@
                 var fullUrl = baseUrl + '?q=' + encodeURIComponent(searchKey);
                 window.location.href = fullUrl;
             })
+            function getDetailBill(row) {
+                const thisBill = row.find('.bill').text();
+                console.log(thisBill);
+                localStorage.setItem('showDetailBillAlert', 'true');
+                let currentUrl = window.location.href;
+                let params = new URLSearchParams(window.location.search);
+                params.set('id', thisBill);
+                let newUrl = window.location.pathname + '?' + params.toString();
+                window.location.href = newUrl;
+            }
+            $('.detail-bill').on('click', async function () {
+                const row = $(this).closest('tr');
+                await getDetailBill(row);
+            });
+            $('.close-icon').on('click', function () {
+                $('.detail-bill-alert').hide();
+                $('.content').removeClass('blur');
+            })
         });
     </script>
 @endpush
+
 @endsection

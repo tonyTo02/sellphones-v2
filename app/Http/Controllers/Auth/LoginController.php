@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\BillController;
 use App\Http\Controllers\Controller;
+use App\Models\Bill;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +33,13 @@ class LoginController extends Controller
     public function dashboard()
     {
         if (Auth::user()) {
-            return view('auth.dashboard');
+            $customer = Auth::user();
+            $bill = new BillController();
+            $order = $bill->listOrderCustomer(33);
+            return view('auth.dashboard', [
+                'customer' => $customer,
+                'order' => $order,
+            ]);
         }
         return redirect()->route('auth.login');
     }

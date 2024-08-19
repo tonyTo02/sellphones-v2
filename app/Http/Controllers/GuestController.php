@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBillCustomerRequest;
 use App\Http\Requests\StoreBillRequest;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Models\Bill;
+use App\Models\BillDetail;
 use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -74,9 +75,18 @@ class GuestController extends Controller
     }
     public function cashOutProcess(StoreBillRequest $request)
     {
+        $cart = session()->get('product', []);
         $bill = new Bill();
+        $billDetail = new BillDetail();
         if (Auth::user()) {
             $object = $bill::create($request->validated());
+            foreach ($cart as $key => $value) {
+                $createBillDetail = $billDetail::create([
+                    'bill_id' => $object->id,
+                    'product_id' => $key,
+                    'quantity' => $value['quantity'],
+                ]);
+            }
             return redirect()->route('homepage')->with('message', 'Đơn hàng của bạn đã đặt thành công. Vui lòng kiểm tra đơn hàng tại trang thông tin người dùng');
         }
         return redirect()->route('homepage')->with('message', 'Vui Lòng đăng nhập trước khi tiến hành thanh toán');
