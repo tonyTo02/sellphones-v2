@@ -38,6 +38,9 @@ class StoreProductRequest extends FormRequest
             'image' => [
                 'required',
             ],
+            'more_images' => [
+                'required',
+            ],
             'manufacturer_id' => [
                 'required',
                 Rule::exists(Manufacturer::class, 'id'),

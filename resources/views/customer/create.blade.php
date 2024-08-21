@@ -1,7 +1,7 @@
 @extends('layout.master')
 @section('content')
 <h1>This Is Create Form</h1>
-<form action="{{route('customer.store')}}" method="post" class="form">
+<form action="{{route('customer.store')}}" method="post" enctype="multipart/form-data" class="form">
     @csrf
     <div class="group-input">
         <label for="name" class="form-label">Tên khách hàng</label>
@@ -34,6 +34,10 @@
     <div class="group-input">
         <label for="phone_number" class="form-label">Số điện thoại</label>
         <input type="text" name="phone_number" class="form-control">
+    </div>
+    <div class="group-input">
+        <label for="avatar" class="form-label">Avatar</label>
+        <input type="file" name="avatar" class="form-control">
     </div>
     <div class="group-input">
         <br>

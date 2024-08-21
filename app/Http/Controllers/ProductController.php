@@ -6,7 +6,9 @@ use App\Models\Manufacturer;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -48,8 +50,21 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-
-        $this->model::create($request->validated());
+        $product_images = new ProductImage();
+        $file = $request->file('more_images');
+        $path = Storage::disk('public')->putFile('product_images', $request->file('image'));
+        $arr = $request->validated();
+        $arr['image'] = $path;
+        $product = $this->model::create($arr);
+        if ($request->hasFile('more_images')) {
+            foreach ($file as $image) {
+                $newPath = Storage::disk('public')->putFile('product_images', $image);
+                $object = $product_images::create([
+                    'product_id' => $product->id,
+                    'image_path' => $newPath,
+                ]);
+            }
+        }
         return redirect()->route('product.index')->with('success');
     }
 
@@ -91,8 +106,13 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product, $id)
+    public function destroy($id)
     {
+        $product = $this->model::findOrFail($id);
+        foreach ($product->images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+            $image->delete();
+        }
         $this->model->destroy($id);
         return redirect()->route('product.index');
     }

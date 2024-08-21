@@ -40,7 +40,7 @@
                     <tr>
                         <td>
                             <div class="cart-item">
-                                <img src="#" class="cart-item-image" alt="">
+                                <img src="{{asset('storage') . '/' . $item['image']}}" class="cart-item-image">
                                 <span>{{$item['name']}}</span>
                             </div>
                         </td>
@@ -51,7 +51,8 @@
                             <input type="number" class="quantity form-control" value="{{$item['quantity']}}" min="1">
                         </td>
                         <td class="total">${{$item['quantity'] * $item['price']}}</td>
-                        <td> <button class="btn btn-danger btn-remove">Xóa</button>
+                        <td>
+                            <button class="btn btn-danger btn-remove">Xóa</button>
                         </td>
                     </tr>
                 @endforeach

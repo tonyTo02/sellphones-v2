@@ -28,6 +28,11 @@ class StoreCustomerRequest extends FormRequest
                 'max:50',
                 'min:2'
             ],
+            'avatar' => [
+                'required',
+                'file',
+                'image',
+            ],
             'gender' => [
                 'required',
                 'boolean',

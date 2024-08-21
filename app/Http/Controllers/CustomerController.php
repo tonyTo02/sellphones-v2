@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
@@ -41,7 +42,10 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        $this->model::create($request->validated());
+        $path = Storage::disk('public')->putFile('avatars', $request->file('avatar'));
+        $arr = $request->validated();
+        $arr['avatar'] = $path;
+        $this->model::create($arr);
         return redirect()->route('customer.index');
     }
 

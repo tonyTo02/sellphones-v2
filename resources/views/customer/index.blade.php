@@ -19,6 +19,7 @@
 <table class="table max-w-7xl mx-auto p-6 lg:p-8 text-center">
     <tr>
         <th>#</th>
+        <th>Avatar</th>
         <th>Name</th>
         <th>Gender</th>
         <th>Age</th>
@@ -33,6 +34,9 @@
     @foreach ($data as $each)
         <tr>
             <td>{{$each->id}}</td>
+            <td>
+                <img src="{{asset('storage') . '/' . $each->avatar}}" width="30px" height="30px" class="avatar">
+            </td>
             <td>{{$each->name}}</td>
             <td>{{$each->getGender()}}</td>
             <td>{{$each->dob}}</td>

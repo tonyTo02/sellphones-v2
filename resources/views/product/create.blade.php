@@ -1,7 +1,7 @@
 @extends('layout.master')
 @section('content')
 <h1>This Is Create Form</h1>
-<form action="{{route('product.store')}}" method="post" class="form">
+<form action="{{route('product.store')}}" method="post" enctype="multipart/form-data" class="form">
     @csrf
     <div class="group-input">
         <label for="name" class="form-label">Tên sản phẩm</label>
@@ -12,8 +12,12 @@
         <textarea name="description" class="form-control"></textarea>
     </div>
     <div class="group-input">
-        <label for="image" class="form-label">Ảnh sản phẩm</label>
+        <label for="image" class="form-label">Ảnh sản phẩm đại diện</label>
         <input type="file" name="image" class="form-control">
+    </div>
+    <div class="group-input">
+        <label for="more_images" class="form-label">Ảnh sản phẩm bổ sung</label>
+        <input type="file" name="more_images[]" class="form-control" multiple>
     </div>
     <div class="group-input">
         <label for="price" class="form-label">Giá sản phẩm</label>

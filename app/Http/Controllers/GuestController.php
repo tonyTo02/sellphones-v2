@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBillCustomerRequest;
 use App\Http\Requests\StoreBillRequest;
-use App\Http\Requests\StoreCustomerRequest;
 use App\Models\Bill;
 use App\Models\BillDetail;
-use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class GuestController extends Controller
 {
@@ -38,7 +34,6 @@ class GuestController extends Controller
         return view('guess.cart', [
             'data' => $cart,
         ]);
-        // return response()->json($cart['1']['name']);
     }
 
     public function addToCart($id)

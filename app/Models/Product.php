@@ -16,4 +16,8 @@ class Product extends Model
         'manufacturer_id',
     ];
 
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
 }
