@@ -57,7 +57,9 @@
         <th>Tổng tiền</th>
         <th>Chi tiết đơn hàng</th>
         <th>Edit</th>
-        <th>Delete</th>
+        @if (Auth::guard('web')->user()->level == '1')
+            <th>Delete</th>
+        @endif
     </tr>
     @foreach ($data as $each)
         <tr>
@@ -75,13 +77,15 @@
             <td>
                 <a href="{{route('bill.edit', $each->id)}}" class="btn btn-primary">Edit</a>
             </td>
-            <td>
-                <form action="{{route('bill.destroy', $each->id)}}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger">Delete</button>
-                </form>
-            </td>
+            @if (Auth::guard('web')->user()->level == '1')
+                <td>
+                    <form action="{{route('bill.destroy', $each->id)}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            @endif
         </tr>
     @endforeach
 </table>

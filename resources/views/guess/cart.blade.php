@@ -36,7 +36,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data as $item)
+                @foreach ($data as $key => $item)
                     <tr>
                         <td>
                             <div class="cart-item">
@@ -52,7 +52,10 @@
                         </td>
                         <td class="total">${{$item['quantity'] * $item['price']}}</td>
                         <td>
-                            <button class="btn btn-danger btn-remove">Xóa</button>
+                            <form action="{{route('guest.remove.cart', $key)}}" method="post">
+                                @csrf
+                                <button class="btn btn-danger btn-remove">Xóa</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
@@ -101,9 +104,8 @@
                 row.addClass('removing');
                 setTimeout(function () {
                     row.remove();
-                    updateTotal();
+                    updateTotalCart();
                 }, 500);
-                updateTotalCart();
             });
             $('.quantity').change(function () {
                 var row = $(this).closest('tr');

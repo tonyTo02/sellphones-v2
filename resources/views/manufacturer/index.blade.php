@@ -25,30 +25,33 @@
         <th>Phone Number</th>
         <th>Create At</th>
         <th>Edit</th>
-        <th>Delete</th>
+        @if (Auth::guard('web')->user()->level === 1)
+            <th>Delete</th>
+        @endif
     </tr>
     @foreach ($data as $each)
         <tr>
             <td>{{$each->id}}</td>
-            <td>{{$each->name}}</td>
             <td>
                 <img src="https://tse1.mm.bing.net/th?id=OIP.PzYZEuku8eAKMBscWYHnLgHaE8&pid=Api&P=0&h=220" class="p-1 m-1"
                     width="100px" height="100px" alt="Đây là ảnh của nhãn hàng">
             </td>
-            <td>{{$each->address}}</td>
+            <td>{{$each->name}}</td>
             <td>{{$each->address}}</td>
             <td>{{$each->phone}}</td>
             <td>{{$each->created_at}}</td>
             <td>
                 <a href="{{route('manufacturer.edit', $each->id)}}" class="btn btn-primary">Edit</a>
             </td>
-            <td>
-                <form action="{{route('manufacturer.destroy', $each->id)}}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger">Delete</button>
-                </form>
-            </td>
+            @if (Auth::guard('web')->user()->level === 1)
+                <td>
+                    <form action="{{route('manufacturer.destroy', $each->id)}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            @endif
         </tr>
     @endforeach
 </table>

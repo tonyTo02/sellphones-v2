@@ -23,7 +23,7 @@
     </div>
 
     <div class="group-input mt-2">
-        <button class="btn btn-success">Create</button>
+        <button class="btn btn-success">Save</button>
     </div>
 </form>
 @endsection

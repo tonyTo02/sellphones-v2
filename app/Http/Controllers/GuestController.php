@@ -18,7 +18,7 @@ class GuestController extends Controller
     public function index(Request $request)
     {
         $product = new Product();
-        $search = $request->get('q');
+        $search = $request->get('search');
         $data = $product->leftJoin('manufacturers', 'products.manufacturer_id', '=', 'manufacturers.id')
             ->select('products.*', 'manufacturers.name as manufacturer_name')
             ->where('products.name', 'like', '%' . $search . '%')
@@ -34,6 +34,15 @@ class GuestController extends Controller
         return view('guess.cart', [
             'data' => $cart,
         ]);
+    }
+    public function removeProductFromCart($id)
+    {
+        $cart = session()->get('product');
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+        }
+        session(['product' => $cart]);
+        return back()->with('removeMessage', 'Xóa thành công!');
     }
 
     public function addToCart($id)

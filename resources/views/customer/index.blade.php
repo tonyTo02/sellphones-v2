@@ -29,10 +29,13 @@
         <th>Phone Number</th>
         <th>Create At</th>
         <th>Edit</th>
-        <th>Delete</th>
+        @if (Auth::guard('web')->user()->level === 1)
+            <th>Delete</th>
+        @endif
+
     </tr>
     @foreach ($data as $each)
-        <tr>
+            <tr>
             <td>{{$each->id}}</td>
             <td>
                 <img src="{{asset('storage') . '/' . $each->avatar}}" width="30px" height="30px" class="avatar">
@@ -48,13 +51,16 @@
             <td>
                 <a href="{{route('customer.edit', $each->id)}}" class="btn btn-primary">Edit</a>
             </td>
-            <td>
-                <form action="{{route('customer.destroy', $each->id)}}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger">Delete</button>
-                </form>
-            </td>
+            @if (Auth::guard('web')->user()->level === 1)
+                <td>
+                    <form action="{{route('customer.destroy', $each->id)}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            @endif
+
         </tr>
     @endforeach
 </table>
@@ -62,6 +68,7 @@
     {{$data->links('pagination')}}
 </div>
 @push('js')
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {

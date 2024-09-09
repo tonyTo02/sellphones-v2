@@ -27,7 +27,9 @@
         <th>Manufacturer</th>
         <th>Create At</th>
         <th>Edit</th>
-        <th>Delete</th>
+        @if (Auth::guard('web')->user()->level === 1)
+            <th>Delete</th>
+        @endif
     </tr>
     @foreach ($data as $each)
         <tr>
@@ -41,13 +43,15 @@
             <td>
                 <a href="{{route('product.edit', $each->id)}}" class="btn btn-primary">Edit</a>
             </td>
-            <td>
-                <form action="{{route('product.destroy', $each->id)}}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger">Delete</button>
-                </form>
-            </td>
+            @if (Auth::guard('web')->user()->level === 1)
+                <td>
+                    <form action="{{route('product.destroy', $each->id)}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            @endif
         </tr>
     @endforeach
 </table>

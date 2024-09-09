@@ -9,18 +9,19 @@
         <input type="text" name="total" class="cart-total-input form-control" hidden>
         <input type="text" name="status" hidden value="1">
         <h1>Form thông tin</h1>
-        @guest
+        @guest('customer')
             <h2>Vui lòng đăng nhập trước khi tiến hành thanh toán</h2>
             <a class="btn btn-danger" href="{{route('auth.login')}}">Đăng nhập</a>
             <a class="btn btn-danger" href="{{route('auth.register')}}">Đăng ký</a>
         @endguest
-        @auth
+        @auth('customer')
             <div class="row">
                 <div class="col-6 justify-content-center text-center border me-1">
-                    <input type="text" name="customer_id" class="form-control" value="{{Auth::user()->id}}" hidden>
-                    <input type="text" name="gender" value="{{Auth::user()->gender}}" hidden>
-                    <input type="text" name="dob" value="{{Auth::user()->dob}}" hidden>
-                    <input type="text" name="password" value="{{Auth::user()->password}}" hidden>
+                    <input type="text" name="customer_id" class="form-control"
+                        value="{{Auth::guard('customer')->user()->id}}" hidden>
+                    <input type="text" name="gender" value="{{Auth::guard('customer')->user()->gender}}" hidden>
+                    <input type="text" name="dob" value="{{Auth::guard('customer')->user()->dob}}" hidden>
+                    <input type="text" name="password" value="{{Auth::guard('customer')->user()->password}}" hidden>
                     <!-- Customer -->
                     <div class="row justify-content-center align-items-center">
                         <div class="col-2 text-center p-1 mt-2 mb-2 align-self-center">
@@ -28,7 +29,7 @@
                         </div>
                         <div class="col-9 text-center p-1 mt-2 mb-2">
                             <input type="text" name="name" class="form-control" placeholder="Customer name"
-                                value="{{Auth::user()->name}}" readonly>
+                                value="{{Auth::guard('customer')->user()->name}}" readonly>
                         </div>
                     </div>
                     <div class="row justify-content-center align-items-center">
@@ -37,7 +38,7 @@
                         </div>
                         <div class="col-9 text-center p-1 mt-2 mb-2">
                             <input type="email" name="email" class="form-control" placeholder="Email"
-                                value="{{Auth::user()->email}}" readonly>
+                                value="{{Auth::guard('customer')->user()->email}}" readonly>
                         </div>
                     </div>
                     <div class="row justify-content-center align-items-center">
@@ -46,7 +47,7 @@
                         </div>
                         <div class="col-9 text-center p-1 mt-2 mb-2">
                             <input type="text" name="address" class="form-control" placeholder="Address"
-                                value="{{Auth::user()->address}}" readonly>
+                                value="{{Auth::guard('customer')->user()->address}}" readonly>
                         </div>
                     </div>
                     <div class="row justify-content-center align-items-center">
@@ -55,7 +56,7 @@
                         </div>
                         <div class="col-9 text-center p-1 mt-2 mb-2">
                             <input type="text" name="phone_number" class="form-control" placeholder="Phone number"
-                                value="{{Auth::user()->phone_number}}" readonly>
+                                value="{{Auth::guard('customer')->user()->phone_number}}" readonly>
                         </div>
                     </div>
                     <div class="row justify-content-center align-items-center">
@@ -90,9 +91,6 @@
                         <span>Số tiền phải thanh toán là:
                             <h5 class="cart-total text-danger"></h5>
                         </span>
-                        <span>
-
-                        </span>
                     </div>
                 </div>
             </div>
@@ -106,19 +104,6 @@
                 </div>
             </div>
         @endauth
-        <div class="row">
-            <div class="col p-1 mt-1">
-                @if ($errors)
-                    <span class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </span>
-                @endif
-            </div>
-        </div>
     </form>
 
 </div>

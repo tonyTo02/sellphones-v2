@@ -91,12 +91,15 @@
                     </ul>
                 </div>
                 <div class="search-bar flex-fill">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Tìm kiếm điện thoại..." name="search">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control search" placeholder="Tìm kiếm điện thoại..."
+                                name="search">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="cart ms-4">
                     <a href="{{route('guess.cart')}}" class="text-white">Giỏ hàng</a>
@@ -138,6 +141,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('.search').change(function () {
+                let searchKey = $(this).val();
+                console.log(searchKey);
+                let baseUrl = window.location.pathname;
+                var fullUrl = baseUrl + '?search=' + encodeURIComponent(searchKey);
+                window.location.href = fullUrl;
+            })
+        });
+    </script>
 
 </body>
 

@@ -8,6 +8,8 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Middleware\CheckCustomerLoginMiddleware;
+use App\Http\Middleware\CheckRoleAdminMiddleware;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,11 +27,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [GuestController::class, 'index'])->name('homepage');
 Route::get('/cart', [GuestController::class, 'viewCart'])->name('guess.cart');
-Route::get('/cashout', [GuestController::class, 'cashOut'])->name('guess.cash.out');
+Route::post('/cart/{id}', [GuestController::class, 'removeProductFromCart'])->name('guest.remove.cart');
 Route::get('/detail/{id}', [GuestController::class, 'showDetailProduct'])->name('guest.product.detail');
-Route::post('/cashout', [GuestController::class, 'cashOutProcess'])->name('cashout.process');
-Route::post('/{id}', [GuestController::class, 'addToCart'])->name('guess.add.cart');
 Route::post('/detail/{id}', [GuestController::class, 'addToCartFormDetailProduct'])->name('guess.add.cart.detail');
+Route::post('/{id}', [GuestController::class, 'addToCart'])->name('guess.add.cart');
+Route::middleware([CheckCustomerLoginMiddleware::class])->group(function () {
+    Route::get('/cashout', [GuestController::class, 'cashOut'])->name('guess.cash.out');
+    Route::post('/cashout', [GuestController::class, 'cashOutProcess'])->name('cashout.process');
+});
 
 Route::prefix('auth')->group(function () {
     Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('auth.dashboard');
@@ -39,11 +44,12 @@ Route::prefix('auth')->group(function () {
     Route::get('/register', [RegisterController::class, 'loadRegisterForm'])->name('auth.register');
     Route::post('/register', [RegisterController::class, 'registerNew'])->name('auth.register.new');
 });
-
 Route::prefix('admin')->group(function () {
-    Route::get('/', [AdminUsersController::class, 'index'])->name('admin.home');
     Route::get('/login', [AdminUsersController::class, 'login'])->name('admin.login');
     Route::post('/login', [AdminUsersController::class, 'loginProcess'])->name('admin.login.process');
+});
+Route::prefix('admin')->middleware([CheckRoleAdminMiddleware::class])->group(function () {
+    Route::get('/', [AdminUsersController::class, 'index'])->name('admin.home');
     Route::get('/create', [AdminUsersController::class, 'create'])->name('admin.create');
     Route::post('/create', [AdminUsersController::class, 'store'])->name('admin.store');
     Route::get('/edit/{id}', [AdminUsersController::class, 'edit'])->name('admin.edit');

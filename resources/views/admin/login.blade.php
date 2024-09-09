@@ -3,7 +3,24 @@
 
 @endpush
 @section('content')
-<h1>Day la trang dang nhap cua he thong quan ly website</h1>
+@if (session()->get('checkAdmin'))
+    <div class="container text-center text-danger">
+        <div class="row">
+            <div class="col">
+                <h2>
+                    THÔNG BÁO!
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h4>
+                    {{session()->get('checkAdmin')}}
+                </h4>
+            </div>
+        </div>
+    </div>
+@endif
 <div class="container centered-form d-flex justify-content-center align-items-center py-5">
     <div class="card shadow-lg p-4" style="width: 25rem;">
         <h2 class="text-center">Login</h2>
