@@ -86,4 +86,35 @@ class GuestController extends Controller
         }
         return redirect()->route('homepage')->with('message', 'Vui Lòng đăng nhập trước khi tiến hành thanh toán');
     }
+
+    public function showDetailProduct($product)
+    {
+        $this_product = new Product();
+        $object = $this_product::query()->find($product);
+        return view('guess.detail', [
+            'data' => $object
+        ]);
+    }
+
+    public function addToCartFormDetailProduct($id, Request $request)
+    {
+        $product = new Product();
+        $object = $product::query()->find($id);
+        $cart = session()->get('product', []);
+        if (isset($cart[$object->id])) {
+            $cart[$object->id]['quantity'] += 1;
+        } else {
+            $cart[$object->id] = [
+                'name' => $object->name,
+                'price' => $object->price,
+                'description' => $object->description,
+                'image' => $object->image,
+                'quantity' => $request->get('quantity'),
+            ];
+        }
+        session()->put('product', $cart);
+        $message = "Đã thêm vào giỏ hàng!";
+        session()->reflash();
+        return back()->with('message', $message);
+    }
 }

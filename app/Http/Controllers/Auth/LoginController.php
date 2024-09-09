@@ -21,8 +21,12 @@ class LoginController extends Controller
         $customer = new Customer();
         $email = $request->input('email');
         $password = $request->input('password');
-        $object = $customer::where('email', '=', $email, 'and', 'password', '=', $password)->get()->first();
-        if ($object) {
+        $credentials = [
+            'email' => $email,
+            'password' => $password,
+        ];
+        $object = $customer::query()->where('email', '=', $email)->first();
+        if (Auth::guard('customer')->attempt($credentials)) {
             Auth::login($object);
             return redirect()->route('homepage')->with('message', 'Xin chào');
         } else {

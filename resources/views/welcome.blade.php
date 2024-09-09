@@ -59,7 +59,8 @@
                         <form action="{{route('guess.add.cart', $product->id)}}" method="post">
                             @csrf
                             <button href="" class="btn btn-primary add-to-cart">Mua ngay</button>
-                            <a href="{{route('product.detail', $product->id)}}" class="btn btn-success view-detail">Xem chi
+                            <a href="{{route('guest.product.detail', $product->id)}}"
+                                class="btn btn-success view-detail">Xem chi
                                 tiết</a>
                         </form>
                     </div>

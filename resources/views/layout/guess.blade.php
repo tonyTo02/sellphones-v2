@@ -102,12 +102,13 @@
                     <a href="{{route('guess.cart')}}" class="text-white">Giỏ hàng</a>
                 </div>
                 <div class="cart ms-4">
-                    @guest
+                    @guest('customer')
                         <a class="btn btn-danger" href="{{route('auth.login')}}">Đăng nhập</a>
                         <a class="btn btn-danger" href="{{route('auth.register')}}">Đăng ký</a>
                     @endguest
-                    @auth
-                        <a href="{{route('auth.dashboard')}}" class="text-white">Hello {{Auth::user()->name}}</a>
+                    @auth('customer')
+                        <a href="{{route('auth.dashboard')}}" class="text-white">Hello
+                            {{Auth::guard('customer')->user()->name}}</a>
                         <form action="{{ route('auth.logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn-link nav-link text-white bg-danger">Logout</button>
