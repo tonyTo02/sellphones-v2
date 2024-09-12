@@ -10,8 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('bill_detail', function (Blueprint $table) {
-            $table->integer('quantity');
+        Schema::create('slide_shows', function (Blueprint $table) {
+            $table->id();
+            $table->string('image_path');
+            $table->timestamps();
         });
     }
 
@@ -20,8 +22,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('bill_detail', function (Blueprint $table) {
-            $table->dropColumn('quantity');
-        });
+        Schema::dropIfExists('slide_shows');
     }
 };

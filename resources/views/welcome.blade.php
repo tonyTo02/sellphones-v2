@@ -10,49 +10,25 @@
     </div>
 @endif
 <section class="product-details">
-    <h2 class="text-center">Chi tiết sản phẩm</h2>
     <div class="product-carousel">
-        <div class="product-item">
-            <div class="row border">
-                <div class="col-md-6 text-center">
-                    <img src="https://tse2.mm.bing.net/th?id=OIP.fnaCAQ0Ah3NQ3kMtUpO1wwHaE8&pid=Api&P=0&h=220"
-                        class="img-fluid" alt="Phone Details">
-                </div>
-                <div class="col-md-6">
-                    <h3>Điện thoại 1</h3>
-                    <p>Giá: $500</p>
-                    <p>Mô tả: Đây là một chiếc điện thoại tuyệt vời với các tính năng hiện đại.</p>
-                    <button class="btn btn-success">Thêm vào giỏ hàng</button>
+        @foreach ($images as $image)
+            <div class="product-item">
+                <div class="row border">
+                    <img src="{{asset('storage') . '/' . $image->image_path}}" width="690px" height="490px"
+                        alt="Phone Details">
                 </div>
             </div>
-        </div>
-        <div class="product-item">
-            <div class="row border">
-                <div class="col-md-6 text-center">
-                    <img src="https://tse2.mm.bing.net/th?id=OIP.fnaCAQ0Ah3NQ3kMtUpO1wwHaE8&pid=Api&P=0&h=220"
-                        class="img-fluid" alt="Phone 2 Details">
-                </div>
-                <div class="col-md-6">
-                    <h3>Điện thoại 2</h3>
-                    <p>Giá: $600</p>
-                    <p>Mô tả: Đây là một chiếc điện thoại tuyệt vời với các tính năng hiện đại.</p>
-                    <button class="btn btn-success">Thêm vào giỏ hàng</button>
-                </div>
-            </div>
-        </div>
-        <!-- Thêm các sản phẩm khác tương tự -->
+        @endforeach
     </div>
 </section>
 <!-- Featured Products -->
 <section class="featured-products mb-4">
-
     <h2 class="text-center">Sản phẩm nổi bật</h2>
     <div class="row">
         @foreach ($data as $product)
             <div class="col-md-4 mb-4">
                 <div class="card border">
-                    <img src="https://tse2.mm.bing.net/th?id=OIP.fnaCAQ0Ah3NQ3kMtUpO1wwHaE8&pid=Api&P=0&h=220"
-                        class="card-img-top" alt="Anh san pham">
+                    <img src="{{asset('storage') . '/' . $product->image}}" class="card-img-top" alt="Anh san pham">
                     <div class="card-body text-center">
                         <h5 class="card-title">{{$product->name}}</h5>
                         <p class="card-text">{{$product->price}}</p>
@@ -66,7 +42,7 @@
                     </div>
                 </div>
             </div>
-        @endforeach     
+        @endforeach
 
         {{$data->links('pagination')}}
         <!-- Thêm các sản phẩm khác tương tự -->

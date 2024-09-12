@@ -6,16 +6,7 @@
 @endpush
 <div class="container centered-form d-flex justify-content-center align-items-center">
     <div class="card shadow-lg p-4" style="width: 25rem;">
-        <h2 class="text-center">Register Chua validate</h2>
-        @if ($errors)
-            <span class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </span>
-        @endif
+        <h2 class="text-center">Đăng ký</h2>
         <form action="{{route('auth.register.new')}}" method="POST">
             @csrf
             <input type="text" name="dob" value="2000/01/01" hidden>
@@ -25,31 +16,28 @@
             <input type="text" class="form-control" name="phone_number" value="0123456789" hidden>
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="text" class="form-control" id="email" name="email" required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
+                <input type="text" class="form-control" id="email" name="email" required value="{{old('email')}}">
+                @error('email')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="name">Username</label>
-                <input type="text" class="form-control" id="name" name="name" required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
+                <input type="text" class="form-control" id="name" name="name" required value="{{old('name')}}">
+                @error('name')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" class="form-control" id="password" name="password" required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
+                @error('password')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
             </div>
             <div class="form-group">
                 <label for="re-password">Re Enter Password:</label>
                 <input type="password" class="form-control" id="re-password" name="re-password" required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
             </div>
             <button type="submit" class="mt-3 btn btn-primary btn-block form-control">Login</button>
         </form>

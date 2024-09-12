@@ -6,6 +6,7 @@ use App\Models\Manufacturer;
 use App\Http\Requests\StoreManufacturerRequest;
 use App\Http\Requests\UpdateManufacturerRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ManufacturerController extends Controller
 {
@@ -39,7 +40,10 @@ class ManufacturerController extends Controller
      */
     public function store(StoreManufacturerRequest $request)
     {
-        $this->model::create($request->validated());
+        $path = Storage::disk('public')->putFile('manufacturer_logo', $request->file('image'));
+        $arr = $request->validated();
+        $arr['image'] = $path;
+        $this->model::create($arr);
         return redirect()->route('manufacturer.index');
     }
 
@@ -75,8 +79,10 @@ class ManufacturerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Manufacturer $manufacturer, $id)
+    public function destroy($id)
     {
+        $object = $this->model::findOrFail($id);
+        Storage::disk('public')->delete($object->image);
         $this->model->destroy($id);
         return redirect()->route('manufacturer.index');
     }

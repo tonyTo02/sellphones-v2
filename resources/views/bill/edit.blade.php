@@ -8,6 +8,9 @@
     <div class="group-input">
         <label for="customer_name" class="form-label">Tên khách hàng</label>
         <input type="text" name="customer_name" class="form-control" value="{{$each->name}}">
+        @error('customer_name')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <label for="order_time" class="form-label">Thời gian đặt hàng</label>
@@ -16,14 +19,23 @@
     <div class="group-input">
         <label for="customer_phone_number" class="form-label">Số điện thoại</label>
         <input type="text" name="customer_phone_number" class="form-control" value="{{$each->phone_number}}">
+        @error('customer_phone_number')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <label for="note" class="form-label">Chú thích</label>
         <input type="text" name="note" class="form-control" value="{{$each->note}}">
+        @error('note')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <label for="customer_address" class="form-label">Địa chỉ giao hàng</label>
         <input type="text" name="customer_address" class="form-control" value="{{$each->address}}">
+        @error('customer_address')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <label for="status" class="form-label">Trạng thái đơn hàng</label>
@@ -36,6 +48,9 @@
                 @endif
             @endforeach
         </select>
+        @error('status')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <label for="total" class="form-label">Tổng tiền</label>

@@ -8,12 +8,6 @@
         @csrf
         <input type="text" name="total" class="cart-total-input form-control" hidden>
         <input type="text" name="status" hidden value="1">
-        <h1>Form thông tin</h1>
-        @guest('customer')
-            <h2>Vui lòng đăng nhập trước khi tiến hành thanh toán</h2>
-            <a class="btn btn-danger" href="{{route('auth.login')}}">Đăng nhập</a>
-            <a class="btn btn-danger" href="{{route('auth.register')}}">Đăng ký</a>
-        @endguest
         @auth('customer')
             <div class="row">
                 <div class="col-6 justify-content-center text-center border me-1">
@@ -29,7 +23,7 @@
                         </div>
                         <div class="col-9 text-center p-1 mt-2 mb-2">
                             <input type="text" name="name" class="form-control" placeholder="Customer name"
-                                value="{{Auth::guard('customer')->user()->name}}" readonly>
+                                value="{{Auth::guard('customer')->user()->name}}">
                         </div>
                     </div>
                     <div class="row justify-content-center align-items-center">
@@ -38,7 +32,7 @@
                         </div>
                         <div class="col-9 text-center p-1 mt-2 mb-2">
                             <input type="email" name="email" class="form-control" placeholder="Email"
-                                value="{{Auth::guard('customer')->user()->email}}" readonly>
+                                value="{{Auth::guard('customer')->user()->email}}">
                         </div>
                     </div>
                     <div class="row justify-content-center align-items-center">
@@ -47,7 +41,7 @@
                         </div>
                         <div class="col-9 text-center p-1 mt-2 mb-2">
                             <input type="text" name="address" class="form-control" placeholder="Address"
-                                value="{{Auth::guard('customer')->user()->address}}" readonly>
+                                value="{{Auth::guard('customer')->user()->address}}">
                         </div>
                     </div>
                     <div class="row justify-content-center align-items-center">
@@ -56,7 +50,7 @@
                         </div>
                         <div class="col-9 text-center p-1 mt-2 mb-2">
                             <input type="text" name="phone_number" class="form-control" placeholder="Phone number"
-                                value="{{Auth::guard('customer')->user()->phone_number}}" readonly>
+                                value="{{Auth::guard('customer')->user()->phone_number}}">
                         </div>
                     </div>
                     <div class="row justify-content-center align-items-center">
@@ -73,11 +67,10 @@
                     @foreach ($data as $item)
                         <div class="row mt-2 mb-1 p-2 border">
                             <div class="col-2">
-                                <img src="#" alt="" width="50px" height="50px">
+                                <img src="{{asset('storage') . '/' . $item['image']}}" alt="" width="50px" height="50px">
                             </div>
                             <div class="col">
                                 <h6>{{$item['name']}}</h6>
-                                <h6>{{$item['description']}}</h6>
                             </div>
                             <div class="col-1">
                                 <h6>{{$item['quantity']}}</h6>

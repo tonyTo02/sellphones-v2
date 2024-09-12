@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SlideShow;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminUsersController extends Controller
 {
@@ -74,5 +76,34 @@ class AdminUsersController extends Controller
     {
         $this->model->destroy($id);
         return redirect()->route('admin.index');
+    }
+
+    public function importImageToSlideShow()
+    {
+        $image = new SlideShow();
+        $object = $image::query()->get();
+        return view('admin.slideshow', [
+            'images' => $object,
+        ]);
+    }
+    public function importImageToSlideShowProcess(Request $request)
+    {
+        $object = new SlideShow();
+        $file = $request->file('images');
+        foreach ($file as $image) {
+            $path = Storage::disk('public')->putFile('slide_show', $image);
+            $object::create([
+                'image_path' => $path
+            ]);
+        }
+        return redirect()->route('admin.home')->with('slideShow', 'Thêm slide show thành công!');
+    }
+    public function slideShowDestroy($id)
+    {
+        $object = new SlideShow();
+        $image = $object::findOrFail($id);
+        Storage::disk('public')->delete($image->image_path);
+        $object->destroy($id);
+        return redirect()->route('admin.slideshow');
     }
 }

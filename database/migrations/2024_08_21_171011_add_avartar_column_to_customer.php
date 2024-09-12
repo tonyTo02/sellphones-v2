@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         if (!Schema::hasColumn('customers', 'avatar')) {
             Schema::table('customers', function (Blueprint $table) {
-                $table->string('avatar')->nullable()->after('name');
+                $table->string('avatar')->default('avatars/avatar.jpg')->after('name');
             });
         }
     }

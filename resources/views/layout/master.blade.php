@@ -46,14 +46,13 @@
     <header class="header">
         <div class="container">
             <nav class="navbar">
-                <a href="#">Logo</a>
-                <ul class="nav d-inline-flex">
+                <!-- <ul class="nav d-inline-flex">
                     <li class="nav-item p-1 m-1 me-1">Trang chủ</li>
                     <li class="nav-item p-1 m-1 me-1">Mat hang hot</li>
                     <li class="nav-item p-1 m-1 me-1">van van</li>
                     <li class="nav-item p-1 m-1 me-1">May may</li>
                     <li class="nav-item p-1 m-1 me-1">alo</li>
-                </ul>
+                </ul> -->
             </nav>
         </div>
     </header>

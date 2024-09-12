@@ -13,9 +13,9 @@ return new class extends Migration {
         Schema::create('manufacturers', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
-            $table->text('address');
+            $table->text('address')->nullable();
             $table->string('phone')->unique();
-            $table->text('image');
+            $table->text('image')->nullable();
             $table->timestamps();
         });
     }

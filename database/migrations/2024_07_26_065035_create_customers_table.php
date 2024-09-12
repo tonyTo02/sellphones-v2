@@ -14,10 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->string('name', 50);
             $table->boolean('gender')->default(0);
-            $table->date('dob');
+            $table->date('dob')->nullable();
             $table->string('email', 50)->unique();
             $table->string('password');
-            $table->text('address');
+            $table->text('address')->nullable();
             $table->timestamps();
         });
     }

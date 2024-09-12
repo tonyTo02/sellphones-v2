@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBillRequest;
 use App\Models\Bill;
 use App\Models\BillDetail;
+use App\Models\Customer;
 use App\Models\Product;
+use App\Models\ProductImage;
+use App\Models\SlideShow;
+use App\Notifications\TesttingNotificationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,14 +22,18 @@ class GuestController extends Controller
     public function index(Request $request)
     {
         $product = new Product();
+        $slideshow = new SlideShow();
         $search = $request->get('search');
         $data = $product->leftJoin('manufacturers', 'products.manufacturer_id', '=', 'manufacturers.id')
             ->select('products.*', 'manufacturers.name as manufacturer_name')
             ->where('products.name', 'like', '%' . $search . '%')
             ->orderBy('products.id')
             ->paginate(9);
+
+        $images = $slideshow::query()->get();
         return view('welcome', [
             'data' => $data,
+            'images' => $images,
         ]);
     }
     public function viewCart()
@@ -48,7 +56,7 @@ class GuestController extends Controller
     public function addToCart($id)
     {
         $product = new Product();
-        $object = $product::query()->find($id);
+        $object = $product::query()->findOrFail($id);
         $cart = session()->get('product', []);
         if (isset($cart[$object->id])) {
             $cart[$object->id]['quantity'] += 1;
@@ -77,12 +85,25 @@ class GuestController extends Controller
             'data' => $cart,
         ]);
     }
+
     public function cashOutProcess(StoreBillRequest $request)
     {
         $cart = session()->get('product', []);
         $bill = new Bill();
         $billDetail = new BillDetail();
-        if (Auth::user()) {
+        $customer = new Customer();
+        $request->validate([
+            'name' => 'required',
+            'address' => 'required',
+            'phone_number' => 'required|min:10|max:10',
+        ]);
+        if (Auth::guard('customer')->user()) {
+            $object = $customer::find($request->get('customer_id'));
+            $object->update([
+                'name' => $request->input('name'),
+                'address' => $request->input('address'),
+                'phone_number' => $request->input('phone_number'),
+            ]);
             $object = $bill::create($request->validated());
             foreach ($cart as $key => $value) {
                 $createBillDetail = $billDetail::create([
@@ -91,6 +112,9 @@ class GuestController extends Controller
                     'quantity' => $value['quantity'],
                 ]);
             }
+            //Gửi mail
+            $user = Auth::guard('customer')->user();
+            $user->notify(new TesttingNotificationMail($object, $user));
             return redirect()->route('homepage')->with('message', 'Đơn hàng của bạn đã đặt thành công. Vui lòng kiểm tra đơn hàng tại trang thông tin người dùng');
         }
         return redirect()->route('homepage')->with('message', 'Vui Lòng đăng nhập trước khi tiến hành thanh toán');
@@ -99,9 +123,12 @@ class GuestController extends Controller
     public function showDetailProduct($product)
     {
         $this_product = new Product();
+        $this_product_images = new ProductImage();
         $object = $this_product::query()->find($product);
+        $images = $this_product_images::query()->where('product_id', '=', $product)->get();
         return view('guess.detail', [
-            'data' => $object
+            'data' => $object,
+            'images' => $images
         ]);
     }
 

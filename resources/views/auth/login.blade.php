@@ -7,6 +7,9 @@
 @endpush
 <div class="container centered-form d-flex justify-content-center align-items-center py-5">
     <div class="card shadow-lg p-4" style="width: 25rem;">
+        @if (session()->get('middlewareMessage'))
+            <h5 class="text-center text-danger">{{session()->get('middlewareMessage')}}</h5>
+        @endif
         <h2 class="text-center">Login</h2>
         <form action="{{route('auth.check.login')}}" method="POST">
             @csrf

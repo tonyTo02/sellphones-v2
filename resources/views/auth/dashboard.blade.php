@@ -17,8 +17,7 @@
         <div class="col border">
             <div class="row p-1 mb-2">
                 <div class="col text-center">
-                    <img src="https://thuthuatnhanh.com/wp-content/uploads/2019/02/anh-dai-dien-dep-cho-zalo.jpeg"
-                        alt="Ảnh đại diện" class="avatar">
+                    <img src="{{asset('storage') . '/' . $customer->avatar}}" alt="Ảnh đại diện" class="avatar">
                 </div>
             </div>
             <hr>
@@ -43,7 +42,7 @@
                     <label for="password" class="form-label">Mật khẩu</label>
                 </div>
                 <div class="col">
-                    <input type="text" id="password" class="form-control" value="{{$customer->password}}" readonly>
+                    <input type="password" id="password" class="form-control" value="{{$customer->password}}" readonly>
                 </div>
             </div>
             <div class="row mt-2">

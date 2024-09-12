@@ -5,6 +5,10 @@
             width: 30%;
         }
 
+        td {
+            align-content: center;
+        }
+
         .detail-bill {
             cursor: pointer;
         }

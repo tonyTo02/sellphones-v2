@@ -7,19 +7,31 @@
     <div class="group-input">
         <label for="name" class="form-label">Tên sản phẩm</label>
         <input type="text" name="name" class="form-control" value="{{$each->name}}">
+        @error('name')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <label for="description" class="form-label">Mô tả sản phẩm</label>
         <textarea name="description" class="form-control">{{$each->description}}</textarea>
+        @error('description')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <label for="image" class="form-label">Ảnh sản phẩm</label>
         <input type="text" name="image" class="form-control" value="{{$each->image}}">
         <input type="file" name="new_image" class="form-control">
+        @error('image')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <label for="price" class="form-label">Giá sản phẩm</label>
         <input type="text" name="price" class="form-control" value="{{$each->price}}">
+        @error('price')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <label for="manufacturer" class="form-label">Nhà sản xuất</label>
@@ -29,6 +41,9 @@
                 </option>
             @endforeach
         </select>
+        @error('manufacturer_id')
+            <p class="text-danger">{{$message}}</p>
+        @enderror
     </div>
     <div class="group-input">
         <br>

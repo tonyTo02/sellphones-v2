@@ -9,17 +9,25 @@
     </div>
 @endif
 <div class="container mt-5" style="min-height: 450px">
-    <div class="detail-product border">
-        <div class="row text-center">
-            <div class="col">
-                <h1>Đây là chi tiết sản phẩm</h1>
-            </div>
-        </div>
+    <div class="detail-product">
         <div class="row">
-            <div class="col text-center">
-                <img src="{{asset('storage') . '/' . $data->image}}" width="400px" height="500px">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col text-center">
+                        <img src="{{asset('storage') . '/' . $data->image}}" width="400px" height="500px"
+                            alt="Phone Details">
+                    </div>
+                </div>
+                <div class="row">
+                    @foreach ($images as $image)
+                        <div class="col text-center">
+                            <img src="{{asset('storage') . '/' . $image->image_path}}" width="200px" height="300px"
+                                alt="Phone Details">
+                        </div>
+                    @endforeach
+                </div>
             </div>
-            <div class="col">
+            <div class="col-md-6">
                 <form action="{{route('guess.add.cart.detail', $data->id)}}" method="post">
                     <div class="row">
                         <h4 class="text-danger">{{$data->name}}</h4>
@@ -43,9 +51,7 @@
                     <div class="row">
                         <h4 class="text-danger">{{$data->description}}</h4>
                     </div>
-                    <div class="row">
-                        <h4 class="text-danger">{{$data->manufacturer_id}}</h4>
-                    </div>
+
                     <div class="row text-end">
                         <div class="col">
                         </div>
@@ -59,6 +65,7 @@
         </div>
     </div>
 </div>
+
 @push('js')
 
 @endpush

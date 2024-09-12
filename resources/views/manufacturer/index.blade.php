@@ -4,6 +4,10 @@
         .search-bar {
             width: 30%;
         }
+
+        td {
+            align-content: center;
+        }
     </style>
 @endpush
 @section('content')
@@ -33,8 +37,8 @@
         <tr>
             <td>{{$each->id}}</td>
             <td>
-                <img src="https://tse1.mm.bing.net/th?id=OIP.PzYZEuku8eAKMBscWYHnLgHaE8&pid=Api&P=0&h=220" class="p-1 m-1"
-                    width="100px" height="100px" alt="Đây là ảnh của nhãn hàng">
+                <img src="{{asset('storage') . '/' . $each->image}}" class="p-1 m-1" width="100px" height="100px"
+                    alt="Đây là ảnh của nhãn hàng">
             </td>
             <td>{{$each->name}}</td>
             <td>{{$each->address}}</td>

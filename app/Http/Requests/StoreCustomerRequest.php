@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Manufacturer;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCustomerRequest extends FormRequest
 {
@@ -28,7 +30,6 @@ class StoreCustomerRequest extends FormRequest
                 'max:50',
                 'min:2'
             ],
-
             'gender' => [
                 'required',
                 'boolean',
@@ -44,6 +45,8 @@ class StoreCustomerRequest extends FormRequest
             ],
             'password' => [
                 'required',
+                'min:6',
+                'max:30',
                 'string',
             ],
             'address' => [
@@ -51,6 +54,12 @@ class StoreCustomerRequest extends FormRequest
             ],
             'phone_number' => [
                 'required',
+                'min:10',
+                'max:10',
+            ],
+            'manufacturer_id' => [
+                'required',
+                Rule::exists(Manufacturer::class, 'id')
             ],
         ];
     }
@@ -58,6 +67,9 @@ class StoreCustomerRequest extends FormRequest
     {
         return [
             'email.unique' => 'The email has already been taken.',
+            'manufacturer_id.exists' => 'The Manufacturer is not exists.',
+            'phone_number.min' => 'Phone number is invalid.',
+            'phone_number.max' => 'Phone number is invalid.',
         ];
     }
 }

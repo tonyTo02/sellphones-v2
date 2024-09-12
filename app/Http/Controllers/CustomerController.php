@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
@@ -45,6 +46,7 @@ class CustomerController extends Controller
         $path = Storage::disk('public')->putFile('avatars', $request->file('avatar'));
         $arr = $request->validated();
         $arr['avatar'] = $path;
+        $arr['password'] = Hash::make($arr['password']);
         $this->model::create($arr);
         return redirect()->route('customer.index');
     }
@@ -74,7 +76,9 @@ class CustomerController extends Controller
     public function update(UpdateCustomerRequest $request, $customer)
     {
         $object = $this->model::query()->find($customer);
-        $object->update($request->validated());
+        $arr = $request->validated();
+        $arr['password'] = Hash::make($arr['password']);
+        $object->update($arr);
         return redirect()->route('customer.index');
     }
 

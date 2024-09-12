@@ -25,19 +25,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [GuestController::class, 'index'])->name('homepage');
-Route::get('/cart', [GuestController::class, 'viewCart'])->name('guess.cart');
-Route::post('/cart/{id}', [GuestController::class, 'removeProductFromCart'])->name('guest.remove.cart');
-Route::get('/detail/{id}', [GuestController::class, 'showDetailProduct'])->name('guest.product.detail');
-Route::post('/detail/{id}', [GuestController::class, 'addToCartFormDetailProduct'])->name('guess.add.cart.detail');
-Route::post('/{id}', [GuestController::class, 'addToCart'])->name('guess.add.cart');
+
 Route::middleware([CheckCustomerLoginMiddleware::class])->group(function () {
     Route::get('/cashout', [GuestController::class, 'cashOut'])->name('guess.cash.out');
-    Route::post('/cashout', [GuestController::class, 'cashOutProcess'])->name('cashout.process');
+    Route::post('/cashout/store', [GuestController::class, 'cashOutProcess'])->name('cashout.process');
 });
+Route::get('/', [GuestController::class, 'index'])->name('homepage');
+Route::get('/cart', [GuestController::class, 'viewCart'])->name('guess.cart');
+Route::post('/{id}', [GuestController::class, 'addToCart'])->name('guess.add.cart');
+Route::post('/cart/{id}/remove', [GuestController::class, 'removeProductFromCart'])->name('guest.remove.cart');
+Route::get('/detail/{id}', [GuestController::class, 'showDetailProduct'])->name('guest.product.detail');
+Route::post('/detail/{id}/add', [GuestController::class, 'addToCartFormDetailProduct'])->name('guess.add.cart.detail');
 
 Route::prefix('auth')->group(function () {
     Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('auth.dashboard');
+    Route::get('/dashboard/{id}/edit', [LoginController::class, 'edit'])->name('auth.edit');
+    Route::put('/dashboard/{id}/update', [LoginController::class, 'update'])->name('auth.update');
     Route::get('/login', [LoginController::class, 'loadLoginForm'])->name('auth.login');
     Route::post('/login', [LoginController::class, 'checkLogin'])->name('auth.check.login');
     Route::post('/logout', [LoginController::class, 'logOut'])->name('auth.logout');
@@ -47,11 +50,14 @@ Route::prefix('auth')->group(function () {
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminUsersController::class, 'login'])->name('admin.login');
     Route::post('/login', [AdminUsersController::class, 'loginProcess'])->name('admin.login.process');
+    Route::get('/create', [AdminUsersController::class, 'create'])->name('admin.create');
+    Route::post('/create', [AdminUsersController::class, 'store'])->name('admin.store');
+    Route::get('/slideshow', [AdminUsersController::class, 'importImageToSlideShow'])->name('admin.slideshow');
+    Route::post('/slideshow/store', [AdminUsersController::class, 'importImageToSlideShowProcess'])->name('admin.slideshow.store');
+    Route::delete('/slideshow/{id}/destroy', [AdminUsersController::class, 'slideShowDestroy'])->name('admin.slideshow.destroy');
 });
 Route::prefix('admin')->middleware([CheckRoleAdminMiddleware::class])->group(function () {
     Route::get('/', [AdminUsersController::class, 'index'])->name('admin.home');
-    Route::get('/create', [AdminUsersController::class, 'create'])->name('admin.create');
-    Route::post('/create', [AdminUsersController::class, 'store'])->name('admin.store');
     Route::get('/edit/{id}', [AdminUsersController::class, 'edit'])->name('admin.edit');
     Route::put('/edit/{id}', [AdminUsersController::class, 'update'])->name('admin.update');
     Route::delete('/destroy/{id}', [AdminUsersController::class, 'destroy'])->name('admin.destroy');

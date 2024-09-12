@@ -4,6 +4,10 @@
         .search-bar {
             width: 30%;
         }
+
+        td {
+            align-content: center;
+        }
     </style>
 @endpush
 @section('content')
@@ -24,7 +28,7 @@
         <th>Gender</th>
         <th>Age</th>
         <th>Email</th>
-        <th>Password</th>
+        <!-- <th>Password</th> -->
         <th>Address</th>
         <th>Phone Number</th>
         <th>Create At</th>
@@ -35,7 +39,7 @@
 
     </tr>
     @foreach ($data as $each)
-            <tr>
+        <tr>
             <td>{{$each->id}}</td>
             <td>
                 <img src="{{asset('storage') . '/' . $each->avatar}}" width="30px" height="30px" class="avatar">
@@ -44,7 +48,7 @@
             <td>{{$each->getGender()}}</td>
             <td>{{$each->dob}}</td>
             <td>{{$each->email}}</td>
-            <td>{{$each->password}}</td>
+            <!-- <td>{{$each->password}}</td> -->
             <td>{{$each->address}}</td>
             <td>{{$each->phone_number}}</td>
             <td>{{$each->created_at}}</td>

@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
             $table->dateTime('order_time')->useCurrent();
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->smallInteger('status')->comment('BillStatusEnum')->index();
             $table->float('total');
             $table->foreignId('customer_id')->constrained();

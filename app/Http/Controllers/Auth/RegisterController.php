@@ -16,6 +16,7 @@ class RegisterController extends Controller
     public function registerNew(StoreCustomerRequest $request)
     {
         $customer = new Customer();
+        $request->validated();
         $customer::create([
             'email' => $request->get('email'),
             'name' => $request->get('name'),

@@ -36,10 +36,10 @@ class LoginController extends Controller
 
     public function dashboard()
     {
-        if (Auth::user()) {
-            $customer = Auth::user();
+        if (Auth::guard('customer')->user()) {
+            $customer = Auth::guard('customer')->user();
             $bill = new BillController();
-            $order = $bill->listOrderCustomer(33);
+            $order = $bill->listOrderCustomer($customer->id);
             return view('auth.dashboard', [
                 'customer' => $customer,
                 'order' => $order,

@@ -17,7 +17,6 @@ class CheckCustomerLoginMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::guard('customer')->user()) {
-            dd(Auth::guard('customer')->user());
             return redirect()->route('auth.login')->with('middlewareMessage', 'Bạn cần đăng nhập để thực hiện chức năng này!');
         }
         return $next($request);

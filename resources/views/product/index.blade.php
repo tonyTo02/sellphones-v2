@@ -4,6 +4,10 @@
         .search-bar {
             width: 30%;
         }
+
+        td {
+            align-content: center;
+        }
     </style>
 @endpush
 @section('content')
@@ -37,7 +41,7 @@
             <td>{{$each->name}}</td>
             <td>{{$each->description}}</td>
             <td>{{$each->price}}$</td>
-            <td><img class="p-1" width="50px" height="50px" src="{{asset('storage') . '/' . $each->image}}"></td>
+            <td><img class="p-1" width="150px" height="170px" src="{{asset('storage') . '/' . $each->image}}"></td>
             <td>{{$each->manufacturer_name}}</td>
             <td>{{$each->created_at}}</td>
             <td>
