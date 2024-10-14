@@ -7,6 +7,7 @@ use App\Http\Controllers\BillController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ManufacturerController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Middleware\CheckCustomerLoginMiddleware;
 use App\Http\Middleware\CheckRoleAdminMiddleware;
@@ -29,6 +30,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([CheckCustomerLoginMiddleware::class])->group(function () {
     Route::get('/cashout', [GuestController::class, 'cashOut'])->name('guess.cash.out');
     Route::post('/cashout/store', [GuestController::class, 'cashOutProcess'])->name('cashout.process');
+    Route::get('/payment/{id}', [PaymentController::class, 'createPayment'])->name('stripe.payment');
+    Route::post('/payment/{id}/{amount}/store', [PaymentController::class, 'processPayment'])->name('stripe.payment.process');
 });
 Route::get('/', [GuestController::class, 'index'])->name('homepage');
 Route::get('/cart', [GuestController::class, 'viewCart'])->name('guess.cart');

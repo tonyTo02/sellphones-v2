@@ -115,9 +115,9 @@ class GuestController extends Controller
             //Gửi mail
             $user = Auth::guard('customer')->user();
             $user->notify(new TesttingNotificationMail($object, $user));
-            return redirect()->route('homepage')->with('message', 'Đơn hàng của bạn đã đặt thành công. Vui lòng kiểm tra đơn hàng tại trang thông tin người dùng');
+            return redirect()->route('stripe.payment', $object->id);
         }
-        return redirect()->route('homepage')->with('message', 'Vui Lòng đăng nhập trước khi tiến hành thanh toán');
+        return back()->with('message', 'Vui Lòng đăng nhập trước khi tiến hành thanh toán');
     }
 
     public function showDetailProduct($product)
