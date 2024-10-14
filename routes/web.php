@@ -38,14 +38,16 @@ Route::get('/detail/{id}', [GuestController::class, 'showDetailProduct'])->name(
 Route::post('/detail/{id}/add', [GuestController::class, 'addToCartFormDetailProduct'])->name('guess.add.cart.detail');
 
 Route::prefix('auth')->group(function () {
+    Route::get('/register', [RegisterController::class, 'loadRegisterForm'])->name('auth.register');
+    Route::post('/register/store', [RegisterController::class, 'verifyEmail'])->name('auth.register.process');
+    Route::get('/register/formotp', [RegisterController::class, 'loadRegisterOtpForm'])->name('auth.register.otp.form');
+    Route::post('/register/formotp/create', [RegisterController::class, 'registerNew'])->name('auth.register.new');
     Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('auth.dashboard');
     Route::get('/dashboard/{id}/edit', [LoginController::class, 'edit'])->name('auth.edit');
     Route::put('/dashboard/{id}/update', [LoginController::class, 'update'])->name('auth.update');
     Route::get('/login', [LoginController::class, 'loadLoginForm'])->name('auth.login');
     Route::post('/login', [LoginController::class, 'checkLogin'])->name('auth.check.login');
     Route::post('/logout', [LoginController::class, 'logOut'])->name('auth.logout');
-    Route::get('/register', [RegisterController::class, 'loadRegisterForm'])->name('auth.register');
-    Route::post('/register', [RegisterController::class, 'registerNew'])->name('auth.register.new');
 });
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminUsersController::class, 'login'])->name('admin.login');

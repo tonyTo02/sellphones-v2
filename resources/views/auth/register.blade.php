@@ -7,7 +7,7 @@
 <div class="container centered-form d-flex justify-content-center align-items-center">
     <div class="card shadow-lg p-4" style="width: 25rem;">
         <h2 class="text-center">Đăng ký</h2>
-        <form action="{{route('auth.register.new')}}" method="POST">
+        <form action="{{route('auth.register.process')}}" method="POST">
             @csrf
             <input type="text" name="dob" value="2000/01/01" hidden>
             <input type="text" name="avatar" value="avatar" hidden>
@@ -30,18 +30,23 @@
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                <input type="password" class="form-control" id="password" name="password" required
+                    value="{{old('password')}}">
                 @error('password')
                     <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="re-password">Re Enter Password:</label>
-                <input type="password" class="form-control" id="re-password" name="re-password" required>
+                <input type="password" class="form-control" id="re-password" name="re-password"
+                    value="{{old('re-password')}}" required>
             </div>
-            <button type="submit" class="mt-3 btn btn-primary btn-block form-control">Login</button>
+            <button type="submit" class="mt-3 btn btn-primary btn-block form-control">Sign Up</button>
         </form>
         <hr>
+        @foreach ($errors->all() as $error)
+            <li>{{$error}} </li>
+        @endforeach
 
     </div>
 </div>

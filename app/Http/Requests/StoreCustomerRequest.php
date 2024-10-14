@@ -57,10 +57,6 @@ class StoreCustomerRequest extends FormRequest
                 'min:10',
                 'max:10',
             ],
-            'manufacturer_id' => [
-                'required',
-                Rule::exists(Manufacturer::class, 'id')
-            ],
         ];
     }
     public function messages()

@@ -6,19 +6,18 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-
-class TesttingNotificationMail extends Notification implements ShouldQueue
+use App\Models\EmailVerification;
+class SendingOtpCodeNotification extends Notification implements ShouldQueue
 {
     use Queueable;
-    private $bill;
-    private $user;
+
+    private EmailVerification $email;
     /**
      * Create a new notification instance.
      */
-    public function __construct($bill, $user)
+    public function __construct(EmailVerification $email)
     {
-        $this->bill = $bill;
-        $this->user = $user;
+        $this->email = $email;
     }
 
     /**
@@ -37,14 +36,10 @@ class TesttingNotificationMail extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Thank You For Your Purchase!')
-            ->line('You just have ordered in SellphoneS Shop.')
-            ->line('Date order: ' . $this->bill->created_at)
-            ->line('Order Price: ' . $this->bill->total)
-            ->line('Phone Number: ' . $this->user->phone_number)
-            ->line('Address Receive: ' . $this->user->address)
-            ->action('View Order', url(':8000/auth/dashboard'))
-            ->line('Thank you for using our service!');
+            ->subject('Mã OTP Xác Thực Email!')
+            ->line('Mã xác thực email của bạn là: ' . $this->email->otp_code)
+            ->line('Mã này có hiệu lực trong 10 phút.')
+            ->line('Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!');
     }
 
     /**

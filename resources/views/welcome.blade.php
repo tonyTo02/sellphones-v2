@@ -1,24 +1,25 @@
 @extends('layout.guess')
 @section('content')
 @push('css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 @endpush
 @if (session('message'))
     <div class="alert alert-success" role="alert">
         {{ session('message') }}
     </div>
 @endif
-<section class="product-details">
-    <div class="product-carousel">
-        @foreach ($images as $image)
-            <div class="product-item">
-                <div class="row border">
-                    <img src="{{asset('storage') . '/' . $image->image_path}}" width="690px" height="490px"
+<section class="slideshow mb-4">
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            @foreach ($images as $image)
+                <div class="swiper-slide">
+                    <img src="{{asset('storage') . '/' . $image->image_path}}" width="100%" height="490px"
                         alt="Phone Details">
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
     </div>
 </section>
 <!-- Featured Products -->
@@ -45,25 +46,25 @@
         @endforeach
 
         {{$data->links('pagination')}}
-        <!-- Thêm các sản phẩm khác tương tự -->
     </div>
 </section>
 
 @push('js')
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.product-carousel').slick({
-                infinite: true,
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                dots: true,
-                arrows: true,
-                prevArrow: '<button type="button" class="slick-prev">Previous</button>',
-                nextArrow: '<button type="button" class="slick-next">Next</button>',
-            });
-        }); 
+    <script type="module">
+        import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'
+        const swiper = new Swiper('.swiper', {
+            direction: 'horizontal',
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            autoplay: {
+                delay: 3000,  // Thời gian giữa mỗi lần tự động chuyển slide (tính bằng milliseconds)
+                disableOnInteraction: false,
+            }
+        })
     </script>
 @endpush
 @endsection
