@@ -46,13 +46,7 @@
     <header class="header">
         <div class="container">
             <nav class="navbar">
-                <!-- <ul class="nav d-inline-flex">
-                    <li class="nav-item p-1 m-1 me-1">Trang chủ</li>
-                    <li class="nav-item p-1 m-1 me-1">Mat hang hot</li>
-                    <li class="nav-item p-1 m-1 me-1">van van</li>
-                    <li class="nav-item p-1 m-1 me-1">May may</li>
-                    <li class="nav-item p-1 m-1 me-1">alo</li>
-                </ul> -->
+
             </nav>
         </div>
     </header>
@@ -74,6 +68,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('bill.index')}}">Bill</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('transaction.index')}}">Transactions</a>
                     </li>
                 </ul>
             </nav>

@@ -66,6 +66,9 @@ Route::prefix('admin')->middleware([CheckRoleAdminMiddleware::class])->group(fun
     Route::get('/edit/{id}', [AdminUsersController::class, 'edit'])->name('admin.edit');
     Route::put('/edit/{id}', [AdminUsersController::class, 'update'])->name('admin.update');
     Route::delete('/destroy/{id}', [AdminUsersController::class, 'destroy'])->name('admin.destroy');
+    // -----Transaction-----
+    Route::get('/transaction', [PaymentController::class, 'index'])->name('transaction.index');
+
     // -----Bill-----
     Route::get('/bill', [BillController::class, 'index'])->name('bill.index');
     Route::get('/bill/create', [BillController::class, 'create'])->name('bill.create');

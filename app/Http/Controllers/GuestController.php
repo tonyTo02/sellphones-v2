@@ -10,8 +10,11 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\SlideShow;
 use App\Notifications\TesttingNotificationMail;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Charge;
+use Stripe\Stripe;
 
 class GuestController extends Controller
 {
@@ -78,6 +81,11 @@ class GuestController extends Controller
     public function cashOut()
     {
         $cart = session()->get('product', []);
+        $totalCart = 0;
+        foreach ($cart as $each) {
+            $totalCart += $each['price'] * $each['quantity'];
+        }
+        session()->put('totalCart', $totalCart);
         if (!$cart) {
             return redirect()->route('homepage')->with('message', 'Vui lòng chọn sản phẩm trước khi thanh toán');
         }
@@ -88,36 +96,71 @@ class GuestController extends Controller
 
     public function cashOutProcess(StoreBillRequest $request)
     {
-        $cart = session()->get('product', []);
-        $bill = new Bill();
-        $billDetail = new BillDetail();
-        $customer = new Customer();
-        $request->validate([
-            'name' => 'required',
-            'address' => 'required',
-            'phone_number' => 'required|min:10|max:10',
-        ]);
-        if (Auth::guard('customer')->user()) {
-            $object = $customer::find($request->get('customer_id'));
-            $object->update([
-                'name' => $request->input('name'),
-                'address' => $request->input('address'),
-                'phone_number' => $request->input('phone_number'),
-            ]);
-            $object = $bill::create($request->validated());
-            foreach ($cart as $key => $value) {
-                $createBillDetail = $billDetail::create([
-                    'bill_id' => $object->id,
-                    'product_id' => $key,
-                    'quantity' => $value['quantity'],
-                ]);
+        try {
+            $cart = session()->get('product', []);
+
+            //session()->get('totalCart) take from $this->cashOut() - function cashOut() above
+            $totalCart = session()->get('totalCart');
+            if ($request->total !== $totalCart) {
+                return back()->with('message', "Something Is Wrong With You!!!");
             }
-            //Gửi mail
-            $user = Auth::guard('customer')->user();
-            $user->notify(new TesttingNotificationMail($object, $user));
-            return redirect()->route('stripe.payment', $object->id);
+            $bill = new Bill();
+            $billDetail = new BillDetail();
+            $customer = new Customer();
+            //Validate Customer Information's Form
+            $request->validate([
+                'name' => 'required',
+                'address' => 'required',
+                'phone_number' => 'required|min:10|max:10',
+            ]);
+
+            if (Auth::guard('customer')->user()) {
+                //Update Customer Infor In case they have another infor
+                $objectCustomer = $customer::find($request->get('customer_id'));
+                $objectCustomer->update([
+                    'name' => $request->input('name'),
+                    'address' => $request->input('address'),
+                    'phone_number' => $request->input('phone_number'),
+                ]);
+                //Create Bill
+                $object = $bill::create($request->validated());
+
+                //Create Detail Bill - With Each Product In Cart
+                foreach ($cart as $key => $value) {
+                    $createBillDetail = $billDetail::create([
+                        'bill_id' => $object->id,
+                        'product_id' => $key,
+                        'quantity' => $value['quantity'],
+                    ]);
+                }
+                // create Stripe Payment
+                Stripe::setApiKey(env('STRIPE_SECRET'));
+                $token = $request->stripeToken;
+                try {
+                    $charge = Charge::create([
+                        'amount' => $object->total, // Số tiền (đơn vị là cents, 1000 = 10 USD)
+                        'currency' => 'usd', // Đơn vị tiền tệ
+                        'description' => 'Thanh toán đơn hàng từ SellphoneS',
+                        'source' => $token,
+                        'receipt_email' => $objectCustomer->email,
+                        'metadata' => [
+                            'bill_id' => $object->id,
+                        ]
+                    ]);
+                } catch (Exception $e) {
+                    dd($e);
+                    return redirect()->route('guess.cash.out')->with('error', 'Thanh toán không thành công! Lỗi: ' . $e->getMessage());
+                }
+                //End Payment
+
+                //Send Email To Customer About Order's Information
+                $user = Auth::guard('customer')->user();
+                $user->notify(new TesttingNotificationMail($object, $user));
+                return redirect()->route('auth.dashboard')->with("message", "Bạn vừa thanh toán thành công đơn hàng: " . $object->id);
+            }
+        } catch (Exception $e) {
+            return back()->with('message', 'Something Went Wrong! Please Try Again!');
         }
-        return back()->with('message', 'Vui Lòng đăng nhập trước khi tiến hành thanh toán');
     }
 
     public function showDetailProduct($product)

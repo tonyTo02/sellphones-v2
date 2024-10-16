@@ -3,10 +3,15 @@
 @push('css')
 
 @endpush
+@if (session()->get('message'))
+    <h1 class="text-center text-danger">
+        {{session()->get('message')}}
+    </h1>
+@endif
 <div class="container mt-5 border text-center" style="min-height: 450px">
-    <form action="{{route('cashout.process')}}" method="post">
+    <form action="{{route('cashout.process')}}" method="post" id="payment-form">
         @csrf
-        <input type="text" name="total" class="cart-total-input form-control" hidden>
+        <input type="number" name="total" class="cart-total-input form-control" hidden>
         <input type="text" name="status" hidden value="1">
         @auth('customer')
             <div class="row">
@@ -80,10 +85,18 @@
                             </div>
                         </div>
                     @endforeach
-                    <div class="grand-total">
+                    <div class="row grand-total">
                         <span>Số tiền phải thanh toán là:
                             <h5 class="cart-total text-danger"></h5>
                         </span>
+                    </div>
+                    <div class="row card-infor">
+                        <div class="col mt-2 p-2">
+                            <label for="card-element" class="form-label">Thông tin thẻ</label>
+                            <div id="card-element" class="form-control">
+                                <!-- Stripe sẽ render thông tin thẻ tại đây -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,10 +111,10 @@
             </div>
         @endauth
     </form>
-
 </div>
 @push('js')
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
         $(document).ready(function () {
             updateTotalCart();
@@ -111,10 +124,57 @@
                     let total = parseFloat($(this).text().replace('$', ''));
                     cartTotal += total;
                 });
-                $('.cart-total').text('$' + cartTotal.toFixed(2));
-                $('.cart-total-input').val(cartTotal.toFixed(2));
+                $('.cart-total').text('$' + cartTotal);
+                $('.cart-total-input').val(cartTotal);
             }
         })
+        // Cấu hình Stripe với Publishable key từ .env
+        const stripe = Stripe('{{ env('STRIPE_KEY') }}');
+        const elements = stripe.elements();
+
+        // Tạo phần tử nhập thẻ của Stripe
+        const card = elements.create('card');
+        card.mount('#card-element');
+
+        // Xử lý lỗi nhập thẻ
+        card.on('change', function (event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Submit form thanh toán
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function (result) {
+                if (result.error) {
+                    // Hiển thị lỗi nếu có
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    // Gửi token tới server
+                    stripeTokenHandler(result.token);
+                }
+            });
+        });
+
+        function stripeTokenHandler(token) {
+            // Thêm token vào form và gửi tới server
+            const form = document.getElementById('payment-form');
+            const hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'stripeToken');
+            hiddenInput.setAttribute('value', token.id);
+            form.appendChild(hiddenInput);
+
+            // Gửi form
+            form.submit();
+        }
     </script>
 @endpush
 @endsection
