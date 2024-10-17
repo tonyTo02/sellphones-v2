@@ -32,7 +32,7 @@
                     <img src="{{asset('storage') . '/' . $product->image}}" class="card-img-top" alt="Anh san pham">
                     <div class="card-body text-center">
                         <h5 class="card-title">{{$product->name}}</h5>
-                        <p class="card-text">{{$product->price}}</p>
+                        <p class="card-text">${{sprintf("%.2f", $product->price / 100)}}</p>
                         <form action="{{route('guess.add.cart', $product->id)}}" method="post">
                             @csrf
                             <button href="" class="btn btn-primary add-to-cart">Mua ngay</button>

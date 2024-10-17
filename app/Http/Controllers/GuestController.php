@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBillRequest;
 use App\Models\Bill;
 use App\Models\BillDetail;
 use App\Models\Customer;
+use App\Models\Manufacturer;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\SlideShow;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Charge;
 use Stripe\Stripe;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class GuestController extends Controller
 {
@@ -53,7 +55,7 @@ class GuestController extends Controller
             unset($cart[$id]);
         }
         session(['product' => $cart]);
-        return back()->with('removeMessage', 'Xóa thành công!');
+        return response()->json(['success' => true]);
     }
 
     public function addToCart($id)
@@ -78,6 +80,22 @@ class GuestController extends Controller
         return back()->with('message', $message);
     }
 
+    public function preGetCashOut(Request $request)
+    {
+        $old = 'old_quantity';
+        $new = 'new_quantity';
+        $cart = session()->get('product', []);
+        foreach ($cart as $key => $value) {
+            $requestNameOld = $old . $key;
+            $requestNameNew = $new . $key;
+            if ($request->get($requestNameNew) != $request->get($requestNameOld)) {
+                $cart[$key]['quantity'] = $request->get($requestNameNew);
+            }
+        }
+        session()->put('product', $cart);
+
+        return redirect()->route('guess.cash.out');
+    }
     public function cashOut()
     {
         $cart = session()->get('product', []);
@@ -101,7 +119,7 @@ class GuestController extends Controller
 
             //session()->get('totalCart) take from $this->cashOut() - function cashOut() above
             $totalCart = session()->get('totalCart');
-            if ($request->total !== $totalCart) {
+            if ($request->total != $totalCart) {
                 return back()->with('message', "Something Is Wrong With You!!!");
             }
             $bill = new Bill();
@@ -168,10 +186,16 @@ class GuestController extends Controller
         $this_product = new Product();
         $this_product_images = new ProductImage();
         $object = $this_product::query()->find($product);
+        $same_product = $this_product::join('manufacturers', 'products.manufacturer_id', '=', 'manufacturers.id')
+            ->select('products.*', 'manufacturers.name as manufacturer_name')
+            ->where('products.id', '!=', $product)
+            ->limit(15)
+            ->get();
         $images = $this_product_images::query()->where('product_id', '=', $product)->get();
         return view('guess.detail', [
             'data' => $object,
-            'images' => $images
+            'images' => $images,
+            'other_product' => $same_product,
         ]);
     }
 

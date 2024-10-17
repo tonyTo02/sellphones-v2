@@ -80,8 +80,9 @@
                             <div class="col-1">
                                 <h6>{{$item['quantity']}}</h6>
                             </div>
-                            <div class="col-2 total">
-                                <h5>${{$item['price'] * $item['quantity']}}</h5>
+                            <div class="col-2">
+                                <h5>${{sprintf("%.2f", ($item['price'] * $item['quantity']) / 100)}}</h5>
+                                <input type="number" value="{{$item['price'] * $item['quantity']}}" class="total-temp" hidden>
                             </div>
                         </div>
                     @endforeach
@@ -120,12 +121,14 @@
             updateTotalCart();
             function updateTotalCart() {
                 let cartTotal = 0;
-                $('.total').each(function () {
-                    let total = parseFloat($(this).text().replace('$', ''));
+                $('.total-temp').each(function () {
+                    let total = parseFloat($(this).val());
                     cartTotal += total;
                 });
-                $('.cart-total').text('$' + cartTotal);
                 $('.cart-total-input').val(cartTotal);
+                console.log(cartTotal);
+                let formatted = (parseFloat(cartTotal) / 100).toFixed(2);
+                $('.cart-total').text('$' + formatted);
             }
         })
         // Cấu hình Stripe với Publishable key từ .env

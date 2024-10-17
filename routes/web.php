@@ -35,6 +35,7 @@ Route::middleware([CheckCustomerLoginMiddleware::class])->group(function () {
 });
 Route::get('/', [GuestController::class, 'index'])->name('homepage');
 Route::get('/cart', [GuestController::class, 'viewCart'])->name('guess.cart');
+Route::post('/cart', [GuestController::class, 'preGetCashOut'])->name('guest.pre.cashout');
 Route::post('/{id}', [GuestController::class, 'addToCart'])->name('guess.add.cart');
 Route::post('/cart/{id}/remove', [GuestController::class, 'removeProductFromCart'])->name('guest.remove.cart');
 Route::get('/detail/{id}', [GuestController::class, 'showDetailProduct'])->name('guest.product.detail');

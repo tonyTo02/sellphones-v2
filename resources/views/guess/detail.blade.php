@@ -10,19 +10,13 @@
 
         .swiper-product {
             width: 100%;
-            height: 300px;
+            height: 400px;
         }
 
         .same-product {
             background-color: #f3f3f3;
-            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .swiper-button-next2,
-        .swiper-button-prev2 {
-            color: #000;
         }
     </style>
 @endpush
@@ -62,7 +56,7 @@
                             Giá tiền:
                         </div>
                         <div class="col">
-                            <h4 class="text-danger">{{$data->price}}</h4>
+                            <h4 class="text-danger">${{sprintf("%.2f", $data->price / 100)}}</h4>
                         </div>
                     </div>
                     <div class="row">
@@ -90,20 +84,24 @@
         </div>
     </div>
     <div class="other-product mt-5">
-        <h4 class="text-center">Các sản phẩm liên quan</h4>
+        <h2 class="text-center text-danger">Các Sản Phẩm Liên Quan</h2>
         <div class="row">
             <div class="swiper-product">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide col-3 same-product me-2">
-                        <div class="image"></div>
-                        <div class="product-name">Tên</div>
-                        <div class="product-price">Giá tiền</div>
-                    </div>
-                    <div class="swiper-slide col-3 same-product me-2">
-                        <div class="image"></div>
-                        <div class="product-name">Tên</div>
-                        <div class="product-price">Giá tiền</div>
-                    </div>
+                    @foreach ($other_product as $product)
+                        <div class="swiper-slide col-3 same-product me-2">
+                            <div class="card border">
+                                <img src="{{asset('storage') . '/' . $product->image}}" alt="Product">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{$product->name}}</h5>
+                                    <p class="card-text">${{sprintf("%.2f", $product->price / 100)}}</p>
+                                    <a href="{{route('guest.product.detail', $product->id)}}"
+                                        class="btn btn-success view-detail">Xem chi
+                                        tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
 
             </div>
@@ -112,7 +110,6 @@
 </div>
 </div>
 </div>
-
 @push('js')
     <script type="module">
         import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'
@@ -126,12 +123,8 @@
         })
         const swiperProduct = new Swiper('.swiper-product', {
             direction: 'horizontal',
-            loop: true,
-            slidesPerView: 1,
-            navigation: {
-                nextEl: '.swiper-button-next2',
-                prevEl: '.swiper-button-prev2',
-            },
+            loop: false,
+            slidesPerView: 5,
         })
     </script>
 

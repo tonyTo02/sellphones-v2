@@ -102,7 +102,7 @@
                         <h6 class="status">{{$each->getBillStatus()}}</h6>
                     </div>
                     <div class="col-2">
-                        <h6>${{$each->total}}</h6>
+                        <h6>${{sprintf("%.2f", $each->total / 100)}}</h6>
                     </div>
                 </div>
             @endforeach
